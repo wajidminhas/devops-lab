@@ -1,0 +1,16 @@
+# Logs (don't commit real logs)
+logs/*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Secrets
+*.env
+secrets/
