@@ -1,0 +1,23 @@
+
+version: '3.8'
+
+services:
+  product-service:
+    image: devops-product-service:dev.01
+    ports:
+      - "8002:8002"
+    container_name: dev-product-service
+    networks:
+      - microservices-network
+
+  calculator-service:
+    image: devops-simple-calcultor:dev.01
+    ports:
+      - "8003:8003"
+    container_name: dev-calculator-service
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    driver: bridge
