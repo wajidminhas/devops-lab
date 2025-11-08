@@ -1,9 +1,8 @@
-
 version: '3.8'
 
 services:
   product-service:
-    image: devops-product-service:dev.01
+    build: ./product-service  # ← Build from source code
     ports:
       - "8002:8002"
     container_name: dev-product-service
@@ -11,7 +10,7 @@ services:
       - microservices-network
 
   calculator-service:
-    image: devops-simple-calcultor:dev.01
+    build: ./simple-calculator-service  # ← Build from source code
     ports:
       - "8003:8003"
     container_name: dev-calculator-service

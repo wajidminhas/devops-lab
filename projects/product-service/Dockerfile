@@ -6,18 +6,14 @@ WORKDIR /app
 RUN pip install uv
 
 # Copy project files
-# COPY pyproject.toml .
-
-
+COPY pyproject.toml .
 COPY . .
 
-# Create virtual environment and install dependencies
+# Install dependencies (including httpx)
 RUN uv sync
 
-# RUN ls -la
-# RUN ls -la .venv/bin/ || echo ".venv/bin/ not found"
+# Expose port
+EXPOSE 8002
 
-# Copy the rest of your application
-
-# Use the virtual environment's uvicorn
-CMD [".venv/bin/uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]
+# Run with global uvicorn (not .venv/bin/uvicorn)
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]
