@@ -7,10 +7,16 @@ RUN pip install uv
 
 # Copy project files
 COPY pyproject.toml .
+
+RUN pip install fastapi uvicorn httpx
+
 COPY . .
 
 # Install dependencies (including httpx)
-RUN uv sync
+# RUN uv sync && \
+#     echo '/root/.local/bin' >> /etc/environment
+
+ENV PATH="/root/.local/bin:${PATH}"
 
 # Expose port
 EXPOSE 8002
