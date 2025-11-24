@@ -1,0 +1,53 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          ghcr.io/${{ github.repository_owner }}/product-service
+          ghcr.io/${{ github.repository_owner }}/calculator-service
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix={{branch}}-
+
+    - name: Build and push product-service
+      uses: docker/build-push-action@v5
+      with:
+        context: ./projects/product-service
+        push: true
+        tags: ghcr.io/${{ github.repository_owner }}/product-service:latest
+        labels: ${{ steps.meta.outputs.labels }}
+
+    - name: Build and push calculator-service
+      uses: docker/build-push-action@v5
+      with:
+        context: ./projects/simple-calculator-service
+        push: true
+        tags: ghcr.io/${{ github.repository_owner }}/calculator-service:latest
+        labels: ${{ steps.meta.outputs.labels }}
